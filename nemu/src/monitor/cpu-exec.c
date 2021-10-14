@@ -49,6 +49,10 @@ void cpu_exec(volatile uint32_t n) {
 	setjmp(jbuf);
 
 	for(; n > 0; n --) {
+		/* int instr_len = exec(cpu.eip);
+		cpu.eip = instr_len;
+		if(nemu_state != RUNNING) {return;}
+		if(nemu_state == RUNING) {nemu_state = STOP;} */
 #ifdef DEBUG
 		swaddr_t eip_temp = cpu.eip;
 		if((n & 0xffff) == 0) {
