@@ -30,7 +30,6 @@ typedef struct {
 	};
 
      swaddr_t eip;
-     
      union {
 		struct {
 			uint32_t CF		:1;
