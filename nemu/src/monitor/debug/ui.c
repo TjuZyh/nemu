@@ -49,30 +49,15 @@ static int cmd_si(char *args) {
  cpu_exec(steps);
  return 0;
 }
-
 static int cmd_info(char *args) {
- if (args == NULL) {
-   printf("Please input the info r or info w\n");
- }
- else {
-   if (strcmp(args, "r") == 0) {
-     printf("eax:  0x%-10x    %-10d\n", cpu.eax, cpu.eax);
-     printf("edx:  0x%-10x    %-10d\n", cpu.edx, cpu.edx);
-     printf("ecx:  0x%-10x    %-10d\n", cpu.ecx, cpu.ecx);
-     printf("ebx:  0x%-10x    %-10d\n", cpu.ebx, cpu.ebx);
-     printf("ebp:  0x%-10x    %-10d\n", cpu.ebp, cpu.ebp);
-     printf("esi:  0x%-10x    %-10d\n", cpu.esi, cpu.esi);
-     printf("esp:  0x%-10x    %-10d\n", cpu.esp, cpu.esp);
-     printf("eip:  0x%-10x    %-10d\n", cpu.eip, cpu.eip);
-   }
-   else if (strcmp(args, "w") == 0) {
-     //display_wp();
-   }
-   else {
-     printf("The info command need a parameter 'r' or 'w'\n");
-   }
- }
- return 0;
+	if (args[0] == 'r') {
+		int i;
+		for (i = R_EAX; i <= R_EDI ; i++) {
+			printf("$%s\t0x%08x\n", regsl[i], reg_l(i));
+		}
+		printf("$eip\t0x%08x\n", cpu.eip);
+	}
+	return 0;
 }
 
 
