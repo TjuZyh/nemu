@@ -37,11 +37,18 @@ static int cmd_q(char *args) {
 }
 
 static int cmd_si(char *args) {
-	cpu_exec(1);
-	return 0;
+ /*get the steps number*/
+ int steps;
+ if (args == NULL){
+   steps = 1;
+ }
+ else{
+   steps = atoi(strtok(NULL, " "));
+ }
+
+ cpu_exec(steps);
+ return 0;
 }
-
-
 
 
 
