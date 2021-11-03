@@ -37,17 +37,12 @@ static int cmd_q(char *args) {
 }
 
 static int cmd_si(char *args) {
- /*get the steps number*/
- int steps;
- if (args == NULL){
-   steps = 1;
- }
- else{
-   steps = atoi(strtok(NULL, " "));
- }
+  char *arg = strtok(NULL, " ");
+  uint64_t n = 1; /* the default value of n is 1 */ 
+  if(arg) n = strtoull(arg, NULL, 10);
+  cpu_exec(n); 
 
- cpu_exec(steps);
- return 0;
+  return 0;
 }
 static int cmd_info(char *args) {
 	if (args[0] == 'r') {
