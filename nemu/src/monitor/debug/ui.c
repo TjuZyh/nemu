@@ -7,15 +7,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
-void cpu_exec(uint64_t);
-void isa_reg_display();
-/* uint32_t paddr_read(paddr_t addr, int len); */
-
-
-void watchpoint_all_display();
-void watchpoint_display(int N);
-bool free_wp(int N);
-WP* new_wp(char *EXPR);
+void cpu_exec(uint32_t);
 
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 char* rl_gets() {
@@ -44,19 +36,61 @@ static int cmd_q(char *args) {
 	return -1;
 }
 
-static int cmd_si(char *args) {
-  char *arg = strtok(NULL, " ");
-  uint64_t n = 1; /* the default value of n is 1 */ 
-  if(arg) n = strtoull(arg, NULL, 10);
-  cpu_exec(n); 
+static int cmd_help(char *args);
 
-  return 0;
+static int cmd_si(char *args);
+
+static int cmd_info(char *args);
+
+static int cmd_x(char *args);
+
+static int cmd_p(char *args){
+    if(args ==NULL)return 0;
+    bool suc = true;
+    uint32_t res = expr(args,&suc);
+    if(suc==false)return 0;
+    printf(" %d : 0x%x\n",res,res);
+    return 0;
 }
 
+static int cmd_w(char *args){
+	if(args==NULL)
+	{
+		printf("Error, arguments are not complete!\n");
+		return 0;
+	}
+	WP* tmp=NULL;
+	tmp=new_wp(args);
+	if(tmp==0)
+	{
+		printf("Error, wrong expression!\n");
+		return 0;
+	}
+	if(tmp==NULL)
+	{
+		printf("Sorry, no more watchpoints can be set!\n");
+		return 0;
+	}
+	printf("Watchpoint set successfully!\n");
+	return 0;
+}
 
+static int cmd_d(char *args){
+	char *arg=strtok(NULL," ");
+	if(arg==NULL)
+	{
+		printf("Error, arguments are not complete!\n");
+		return 0;
+	}
 
+	int n;
+	sscanf(arg,"%d",&n);
+	WP* test=find_n(n);
+	if(test)free_wp(test);
 
-static int cmd_help(char *args);
+	return 0;
+}
+
 
 static struct {
 	char *name;
@@ -68,7 +102,12 @@ static struct {
 	{ "q", "Exit NEMU", cmd_q },
 
 	/* TODO: Add more commands */
-	{ "si", "Let the program execute n steps", cmd_si },
+	{ "si", "Execute the sequence", cmd_si},
+	{ "info", "Print SUBCMD info", cmd_info},
+	{ "x", "Scan the memory", cmd_x},
+	{ "p", "Evaluate the expression", cmd_p},
+	{ "w", "Set a monitor point", cmd_w},
+	{ "d", "Delete monitor point", cmd_d},
 
 
 };
@@ -96,6 +135,77 @@ static int cmd_help(char *args) {
 		printf("Unknown command '%s'\n", arg);
 	}
 	return 0;
+}
+
+static int cmd_si(char *args){
+	char *arg = strtok(NULL, " ");
+	int step = 1;
+
+	if(arg == NULL) {
+		// no argument given
+	}
+	else {
+		sscanf(args, "%d", &step);
+	}
+	printf("Execute %d sequence\n", step);
+	cpu_exec(step);
+	return 0;
+}
+
+static int cmd_info(char *args){
+	char *arg = strtok(NULL, " ");
+	char cmd = 1;
+
+	if(arg == NULL) {
+		// no argument given
+		printf("the number of subcom is not true\n");
+	}
+	else {
+		sscanf(args, "%s", &cmd);
+		if(cmd == 'r'){
+			printf("Print register status\n");
+			int i;
+			for(i = R_EAX; i <= R_EDI; i++){
+				printf("$%s\t0x%08x\n",regsl[i],reg_l(i));
+			}
+			printf("$eip\t0x%08x\n",cpu.eip);
+		}
+		else if(cmd == 'w'){
+			printf("Print monitoring point information\n");
+			info_w();
+		}
+	}
+	return 0;
+}
+
+static int cmd_x(char *args){
+	char *arg = strtok(NULL, " ");
+	if(arg == NULL){
+		printf("the number of subcom is not true\n");
+		return 0;
+	}
+	int n;
+	lnaddr_t exprs;
+	//sscanf(args, "%d%x", &n, &exprs);
+	sscanf(arg, "%d", &n);  
+    sscanf(arg, "%x", &exprs);  
+	int i;
+	
+	for(i = 0; i < n; i++){
+		if(i % 4 == 0)
+			printf("0x%08x", exprs + i*4);
+		printf("   0x%08x", swaddr_read(exprs + i*4, 4));
+		if((i+1) % 4 == 0) 
+			printf("\n");	
+	}
+	if((i+1) % 8) printf("\n");
+	return 0;
+	/*
+	for(i = 0; i < n; i++){
+		printf("0x%08x   0x%08x\n", exprs + i*4, swaddr_read(exprs + i*4, 4));
+	}
+	*/
+	
 }
 
 void ui_mainloop() {
