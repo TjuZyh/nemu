@@ -7,7 +7,15 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
-void cpu_exec(uint32_t);
+void cpu_exec(uint64_t);
+void isa_reg_display();
+/* uint32_t paddr_read(paddr_t addr, int len); */
+
+
+void watchpoint_all_display();
+void watchpoint_display(int N);
+bool free_wp(int N);
+WP* new_wp(char *EXPR);
 
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 char* rl_gets() {
@@ -44,18 +52,6 @@ static int cmd_si(char *args) {
 
   return 0;
 }
-static int cmd_info(char *args) {
-	if (args[0] == 'r') {
-		int i;
-		for (i = R_EAX; i <= R_EDI ; i++) {
-			printf("$%s\t0x%08x\n", regsl[i], reg_l(i));
-		}
-		printf("$eip\t0x%08x\n", cpu.eip);
-	}
-	return 0;
-}
-
-
 
 
 
@@ -73,7 +69,6 @@ static struct {
 
 	/* TODO: Add more commands */
 	{ "si", "Let the program execute n steps", cmd_si },
-	{ "info", "Display the register status and the watchpoint information", cmd_info},
 
 
 };
