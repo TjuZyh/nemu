@@ -63,6 +63,8 @@ static int cmd_info(char *args) {
 
 
 
+
+
 static int cmd_help(char *args);
 
 static struct {
@@ -77,6 +79,7 @@ static struct {
 	/* TODO: Add more commands */
 	{ "si", "Let the program execute n steps", cmd_si },
 	{ "info", "Display the register status and the watchpoint information", cmd_info},
+
 
 };
 
