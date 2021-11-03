@@ -82,7 +82,7 @@ static int cmd_d(char *args){
 		printf("Error, arguments are not complete!\n");
 		return 0;
 	}
-
+    
 	int n;
 	sscanf(arg,"%d",&n);
 	WP* test=find_n(n);
@@ -90,7 +90,6 @@ static int cmd_d(char *args){
 
 	return 0;
 }
-
 
 static struct {
 	char *name;
@@ -108,7 +107,6 @@ static struct {
 	{ "p", "Evaluate the expression", cmd_p},
 	{ "w", "Set a monitor point", cmd_w},
 	{ "d", "Delete monitor point", cmd_d},
-
 
 };
 
