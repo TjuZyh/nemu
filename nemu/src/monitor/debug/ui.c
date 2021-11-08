@@ -92,6 +92,16 @@ static int cmd_x(char *args){ // 扫描内存。命令格式 x N EXPR，N是扫�
 	return 0;
 }
 
+static int cmd_p(char *args){
+	bool flag;
+	int res = expr(args, &flag);
+	if(flag)
+		printf("0x%x = %d\n", res, res);
+	else
+		printf("表达式错误。\n");
+	return 0;
+}
+
 static struct {
 	char *name;
 	char *description;
@@ -101,11 +111,11 @@ static struct {
 	{ "c", "Continue the execution of the program", cmd_c },
 	{ "q", "Exit NEMU", cmd_q },
 	/* TODO: Add more commands */
-	{"si", "单步执行", cmd_si},
-	{"info", "打印寄存器状态", cmd_info}, // 输入命令 info r 读寄存器 
+	{ "si", "单步执行", cmd_si},
+	{ "info", "打印寄存器状态", cmd_info}, // 输入命令 info r 读寄存器 
 										 // 输入命令 info w 写寄存器（未开发）
-	{"x", "扫描内存", cmd_x}   
-
+	{ "x", "扫描内存", cmd_x},
+	{ "p", "表达式求值", cmd_p}
 };
 
 #define NR_CMD (sizeof(cmd_table) / sizeof(cmd_table[0]))
