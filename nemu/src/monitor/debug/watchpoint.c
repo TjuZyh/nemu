@@ -91,7 +91,7 @@ WP* find_n(int n){
 }
 
 void info_w(){ // 打印监视点
-	printf("Num\tType\tValue\tWhat\n");
+	printf("No\tType\tValue\tExpression\n");
 	int i;
 	for(i = 0; i < NR_WP; ++i){
 		if(wp_pool[i].using) 
