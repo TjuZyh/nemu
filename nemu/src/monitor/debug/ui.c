@@ -50,7 +50,7 @@ static int cmd_si(char *args){ // 单步执行
 	return 0;
 }
 
-static int cmd_info(char *args){ // 打印寄存器状态
+static int cmd_info(char *args){ // 打印寄存器或监视点状态
 	char *arg = strtok(NULL, " "); // 以空格为分割符分割字符串，获取命令中的r命令。
 	if(arg == NULL || *arg == 'r'){
 		int i;
@@ -72,7 +72,7 @@ static int cmd_info(char *args){ // 打印寄存器状态
 		*/
 	}
 	else if(*arg == 'w'){
-		printf("功能待开发。\n");
+		info_w();
 	}
 	return 0;
 }
@@ -125,8 +125,8 @@ static struct {
 	{ "q", "Exit NEMU", cmd_q },
 	/* TODO: Add more commands */
 	{ "si", "单步执行", cmd_si},
-	{ "info", "打印寄存器状态", cmd_info}, // 输入命令 info r 读寄存器 
-										 // 输入命令 info w 写寄存器（未开发）
+	{ "info", "打印寄存器或监视点状态", cmd_info}, // 输入命令 info r 打印寄存器 
+										 // 输入命令 info w 打印监视点状态
 	{ "x", "扫描内存", cmd_x},
 	{ "p", "表达式求值", cmd_p},
 	{ "w", "增加监视点", cmd_w},

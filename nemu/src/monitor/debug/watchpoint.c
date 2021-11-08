@@ -19,7 +19,7 @@ void init_wp_pool() {
 }
 
 /* TODO: Implement the functionality of watchpoint */
-WP *new_wp(char *args){
+WP *new_wp(char *args){ // 新增一个监视点
 	if(!free_)
 		assert(0);
 	
@@ -30,7 +30,7 @@ WP *new_wp(char *args){
 	using_wp -> using = 1;
 	strcpy(using_wp->expression, args);
 	bool success;
-	using_wp -> old_value = expr(args, &success);
+	using_wp -> value = expr(args, &success);
 	using_wp -> next = NULL;
 
 	if(!head)
@@ -45,7 +45,7 @@ WP *new_wp(char *args){
 	return using_wp;
 }
 
-void free_wp(WP* wp){
+void free_wp(WP* wp){ // 删除一个监视点
 	if(wp == 0)
 		return;
 	if(head == wp){ // wp是第一个监视点
@@ -88,4 +88,13 @@ WP* find_n(int n){
 	}
 	printf("%d号监视点删除成功。\n", n);
 	return &wp_pool[n];
+}
+
+void info_w(){ // 打印监视点
+	printf("Num\tType\tValue\tWhat\n");
+	int i;
+	for(i = 0; i < NR_WP; ++i){
+		if(wp_pool[i].using) 
+			printf("%2d\t%c\t0x%x\t%s\n", wp_pool[i].no, wp_pool[i].type, wp_pool[i].value, wp_pool[i].expression);
+	}
 }
