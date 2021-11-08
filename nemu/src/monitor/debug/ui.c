@@ -39,13 +39,29 @@ static int cmd_q(char *args) {
 static int cmd_help(char *args);
 
 static int cmd_si(char *args){ // 单步执行
-	char *arg = strtok(NULL, " "); // 以空格为分割符分割字符串，获取命令中的步数。
+	char *arg = strtok(NULL, " "); // 以空格为分割符分割字符串，获取命令中的执行步数。
 	int step; // 执行步数
 	if(arg == NULL) // 输入为空，默认执行1步
 		step = 1;
 	else
 		step = atoi(arg);
 	cpu_exec(step);
+	return 0;
+}
+
+static int cmd_info(char *args){ // 打印寄存器状态
+	char *arg = strtok(NULL, " "); // 以空格为分割符分割字符串，获取命令中的r命令。
+	if(arg == NULL || *arg == 'r'){
+		int i;
+		for(i = 0; i < 8; ++i)
+			printf("%s: 0x%x\n", regsl[i], cpu.gpr[i]._32);
+		printf("\n");
+		for(i = 0; i < 8; ++i)
+			printf("%s: 0x%x\n", regsl[i], cpu.gpr[i]._16);
+	}
+	else if(*arg == 'w'){
+		printf("命令待开发\n");
+	}
 	return 0;
 }
 
@@ -58,7 +74,9 @@ static struct {
 	{ "c", "Continue the execution of the program", cmd_c },
 	{ "q", "Exit NEMU", cmd_q },
 	/* TODO: Add more commands */
-	{"si", "单步执行", cmd_si}
+	{"si", "单步执行", cmd_si},
+	{"info", "打印寄存器状态", cmd_info} // 输入命令 info r 读寄存器 
+										// 输入命令 info w 写寄存器（未开发）
 
 };
 
