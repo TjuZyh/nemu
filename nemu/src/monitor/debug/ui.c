@@ -1,6 +1,7 @@
 #include "monitor/monitor.h"
 #include "monitor/expr.h"
 #include "monitor/watchpoint.h"
+#include "monitor/elf.h"
 #include "nemu.h"
 
 #include <stdlib.h>
@@ -92,9 +93,11 @@ static int cmd_x(char *args){ // 扫描内存。命令格式 x N EXPR，N是扫�
 	return 0;
 }
 
-static int cmd_p(char *args){
-	bool flag;
-	int res = expr(args, &flag);
+static int cmd_p(char *args){ // 表达式求值
+	if(args == NULL)
+		printf("未输入表达式。\n");
+	bool flag = false;
+	uint32_t res = expr(args, &flag);
 	if(flag)
 		printf("0x%x = %d\n", res, res);
 	else

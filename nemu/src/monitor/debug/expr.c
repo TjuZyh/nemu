@@ -1,30 +1,50 @@
 #include "nemu.h"
+#include <elf.h>
 
 /* We use the POSIX regex functions to process regular expressions.
  * Type 'man regex' for more information about POSIX regex functions.
  */
 #include <sys/types.h>
 #include <regex.h>
+#include <stdlib.h>
+
+extern char *strtab;
+extern Elf32_Sym *symtab;
+extern int nr_symtab_entry;
 
 enum {
-	NOTYPE = 256, EQ
+	NOTYPE = 256, EQ,
 
 	/* TODO: Add more token types */
+	NEQ, AND, OR, MINUS, POINTER, DEX, HEX, VARIABLE, REGISTER
 
 };
 
 static struct rule {
 	char *regex;
 	int token_type;
+	int prior;
 } rules[] = {
 
 	/* TODO: Add more rules.
 	 * Pay attention to the precedence level of different rules.
 	 */
-
-	{" +",	NOTYPE},				// spaces
-	{"\\+", '+'},					// plus
-	{"==", EQ}						// equal
+	{"\\b0[xX][0-9a-fA-F]+\\b", HEX, 0},
+	{"\\b[0-9]+\\b", DEX, 0},
+	{"\\$[a-zA-Z]+", REGISTER, 0},
+	{" +", NOTYPE, 0}, // spaces
+	{"\\+", '+', 4},   // 加
+	{"-", '-', 4},	   // 减
+	{"\\*", '*', 5},   // 乘
+	{"/", '/', 5},	   // 除
+	{"==", EQ, 3},	   // 相等
+	{"!=", NEQ, 3},	   // 不等
+	{"!", '!', 6},
+	{"&&", AND, 2},	   // 与
+	{"\\|\\|", OR, 1}, // 或
+	{"\\(", '(', 7},
+	{"\\)", ')', 7},
+	{"[a-zA-Z][A-Za-z0-9_]*", VARIABLE, 0},
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
@@ -51,6 +71,7 @@ void init_regex() {
 typedef struct token {
 	int type;
 	char str[32];
+	int prior;
 } Token;
 
 Token tokens[32];
@@ -70,18 +91,33 @@ static bool make_token(char *e) {
 				char *substr_start = e + position;
 				int substr_len = pmatch.rm_eo;
 
-				Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s", i, rules[i].regex, position, substr_len, substr_len, substr_start);
+				char *ls = e + position + 1;
+				// Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s", i, rules[i].regex, position, substr_len, substr_len, substr_start);
 				position += substr_len;
 
 				/* TODO: Now a new token is recognized with rules[i]. Add codes
 				 * to record the token in the array `tokens'. For certain types
 				 * of tokens, some extra actions should be performed.
 				 */
-
-				switch(rules[i].token_type) {
-					default: panic("please implement me");
+				if (substr_len > 32) 
+					printf("表达式错误。\n");
+				if (rules[i].token_type == NOTYPE)
+					break;
+				if (rules[i].token_type == REGISTER) {
+					strncpy(tokens[nr_token].str, ls, substr_len - 1);
+					tokens[nr_token].str[substr_len - 1] = '\0';
 				}
-
+				else if (rules[i].token_type == VARIABLE){
+					strncpy(tokens[nr_token].str, e + position - substr_len, substr_len);
+					tokens[nr_token].str[substr_len] = '\0';
+				}
+				else{
+					strncpy(tokens[nr_token].str, substr_start, substr_len);
+					tokens[nr_token].str[substr_len] = '\0';
+				}
+				tokens[nr_token].type = rules[i].token_type;
+				tokens[nr_token].prior = rules[i].prior;
+				++nr_token;
 				break;
 			}
 		}
@@ -91,18 +127,167 @@ static bool make_token(char *e) {
 			return false;
 		}
 	}
-
 	return true; 
 }
 
+uint32_t getVariable(char *args, bool *success){
+	return -1;
+}
+
+// 括号匹配函数
+int check_parentheses(int p, int q) { // 括号匹配返回为1，括号匹配但两边无括号为2，括号非法为0
+	int i, bracket_num = 0;
+	if (tokens[p].type != '(' || tokens[q].type != ')')
+		return false;
+	for (i = p; i <= q; ++i) {
+		if (tokens[i].type == '(')
+			++bracket_num;
+		else if (tokens[i].type == ')')
+			--bracket_num;
+		if (bracket_num == 0 && i < q)
+			return false;
+	}
+	if (bracket_num != 0)
+		return false;
+	return true;
+}
+
+// 主操作符寻找函数
+int dominant_operator(int p, int q) {
+	int i, pos = p;
+	int ls = 8, bracket_num = 0;
+	for (i = p; i <= q; ++i) {
+		if (tokens[i].type >= DEX && tokens[i].type <= REGISTER)
+			continue;
+		if (tokens[i].type == '(') {
+			++bracket_num;
+			++i;
+			while (i <= q) {
+				if (tokens[i].type == '(')
+					++bracket_num;
+				else if (tokens[i].type == ')')
+					--bracket_num;
+				if (bracket_num == 0)
+					break;
+				++i;
+			}
+			if (bracket_num)
+				return -1;
+			
+		}
+		if (tokens[i].prior <= ls) {
+			ls = tokens[i].prior;
+			pos = i;
+		}
+	}
+	return pos;
+}
+
+uint32_t eval(int p, int q, bool *succuess) {
+	if (p > q) {
+		*succuess = false;
+		return 0;
+	}
+	else if (p == q) {
+		uint32_t num = 0;
+		if (tokens[p].type == DEX)
+			sscanf(tokens[p].str, "%d", &num);
+		if (tokens[p].type == HEX)
+			sscanf(tokens[p].str, "%x", &num);
+		if (tokens[p].type == REGISTER) {
+			int i;
+			uint32_t len = strlen(tokens[p].str);
+			if (len == 3) {
+				for (i = R_EAX; i <= R_EDI; ++i)
+					if (!strcmp(tokens[p].str, regsl[i]))
+						break;
+				if (i > R_EDI)
+					if (!strcmp(tokens[p].str, "eip"))
+						num = cpu.eip;
+					else
+						*succuess = false;
+				else
+					num = reg_l(i);
+			}
+			if (len == 2) {
+				if (tokens[p].str[1] == 'x' || tokens[p].str[1] == 'p' || tokens[p].str[1] == 'i') {
+					for (i = R_AX; i <= R_DI; ++i) {
+						if (!strcmp(tokens[p].str, regsw[i]))
+							break;
+					}
+					num = reg_w(i);
+				}
+				else if (tokens[p].str[1] == 'l' || tokens[p].str[1] == 'h') {
+					for (i = R_AL; i <= R_BH; ++i) {
+						if (!strcmp(tokens[p].str, regsb[i]))
+							break;
+					}
+					num = reg_b(i);
+				}
+				else
+					assert(1);
+			}
+		}
+		if (tokens[p].type == VARIABLE)
+			return getVariable(tokens[p].str, succuess);
+		
+		return num;
+	}
+	else if (check_parentheses(p, q) == true)
+		return eval(p + 1, q - 1, succuess);
+	else {
+		int op = dominant_operator(p, q);
+		if (op == -1) {
+			*succuess = false;
+			return -1;
+		}
+		if (p == op || tokens[op].type == POINTER || tokens[op].type == MINUS || tokens[op].type == '!') {
+			uint32_t ls = eval(p + 1, q, succuess);
+			switch (tokens[op].type) {
+				case POINTER: return swaddr_read(ls, 4);
+				case MINUS: return -ls;
+				case '!': return !ls;
+				default: *succuess = false; return -1;
+			}
+		}
+		uint32_t val1 = eval(p, op - 1, succuess), val2 = eval(op + 1, q, succuess);
+		switch (tokens[op].type) {
+			case '+': return val1 + val2;
+			case '-': return val1 - val2;
+			case '*': return val1 * val2;
+			case '/': return val1 / val2;
+			case EQ: return val1 == val2;
+			case NEQ: return val1 != val2;
+			case AND: return val1 && val2;
+			case OR: return val1 || val2;
+			default: break;
+		}
+	}
+	return -1;
+}
+
 uint32_t expr(char *e, bool *success) {
-	if(!make_token(e)) {
+	if (!make_token(e)) {
 		*success = false;
 		return 0;
 	}
 
 	/* TODO: Insert codes to evaluate the expression. */
-	panic("please implement me");
-	return 0;
-}
+	int i;
+	for (i = 0; i < nr_token; ++i) {
+		if (i == 0 || ((tokens[i - 1].type < DEX || tokens[i - 1].type > REGISTER) && tokens[i - 1].type != ')')) {
+			if (tokens[i].type == '*') {
+				tokens[i].type = POINTER;
+				tokens[i].prior = 6;
+			}
+			if (tokens[i].type == '-') {
+				tokens[i].type = MINUS;
+				tokens[i].prior = 6;
+			}
+		}
+	}
 
+	/* TODO: Insert codes to evaluate the expression. */
+	*success = true;
+	return eval(0, nr_token - 1, success);
+}

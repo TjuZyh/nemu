@@ -6,15 +6,12 @@
 typedef struct watchpoint {
 	int NO;
 	struct watchpoint *next;
+	/* TODO: Add more members if necessary */
 	char type; // w 或者 b
 	int using_value; // 正在使用的值
 	int old_value; // 旧值
 	int new_value; // 新值
 	char expression[32]; // 被监视的表达式
-
-	/* TODO: Add more members if necessary */
-
-
 } WP;
 
 int change();
