@@ -79,7 +79,7 @@ void free_wp(WP* wp){
 
 WP* find_n(int n){
 	if((n < 0) || (NR_WP <= n)) {
-		printf("这个监视点不存在。\n"); 
+		printf("命令错误。\n"); 
 		return 0;
 	}
 	if(wp_pool[n].using == 0) {
