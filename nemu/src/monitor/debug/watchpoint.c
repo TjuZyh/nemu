@@ -86,5 +86,6 @@ WP* find_n(int n){
 		printf("这个监视点未被使用。\n"); 
 		return 0;
 	}
+	printf("%d号监视点删除成功。\n", n);
 	return &wp_pool[n];
 }
