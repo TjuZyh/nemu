@@ -52,6 +52,7 @@ static int cmd_si(char *args){ // 单步执行
 static int cmd_info(char *args){ // 打印寄存器状态
 	char *arg = strtok(NULL, " "); // 以空格为分割符分割字符串，获取命令中的r命令。
 	if(arg == NULL || *arg == 'r'){
+		/*
 		int i;
 		for(i = 0; i < 8; ++i)
 			printf("%s: 0x%x\n", regsl[i], cpu.gpr[i]._32);
@@ -61,6 +62,15 @@ static int cmd_info(char *args){ // 打印寄存器状态
 		printf("\n");
 		for(i = 0; i < 4; i++)
 			printf("%s : 0x%x\t%s : 0x%x\n", regsb[i], cpu.gpr[i]._8[0], regsb[i+4], cpu.gpr[i]._8[1]);
+		*/
+	 	printf("eax is %x\n",cpu.eax);
+        printf("ecx is %x\n",cpu.ecx);
+        printf("edx is %x\n",cpu.edx);
+        printf("ebx is %x\n",cpu.ebx);
+        printf("esp is %x\n",cpu.esp);
+        printf("ebp is %x\n",cpu.ebp); 
+        printf("esi is %x\n",cpu.esi);
+        printf("edi is %x\n",cpu.edi);
 	}
 	else if(*arg == 'w'){
 		printf("命令待开发\n");
