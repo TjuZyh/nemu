@@ -4,7 +4,7 @@
 #include "common.h"
 
 typedef struct watchpoint {
-	int NO;
+	int no;
 	struct watchpoint *next;
 	/* TODO: Add more members if necessary */
 	char type; // w 或者 b

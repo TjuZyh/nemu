@@ -131,6 +131,7 @@ static bool make_token(char *e) {
 }
 
 uint32_t getVariable(char *args, bool *success){
+	printf("功能待开发\n");
 	return -1;
 }
 
@@ -190,11 +191,13 @@ uint32_t eval(int p, int q, bool *succuess) {
 	}
 	else if (p == q) {
 		uint32_t num = 0;
-		if (tokens[p].type == DEX)
+		if (tokens[p].type == DEX) // 十进制数
 			sscanf(tokens[p].str, "%d", &num);
-		if (tokens[p].type == HEX)
+		if (tokens[p].type == HEX) // 十六进制数
 			sscanf(tokens[p].str, "%x", &num);
-		if (tokens[p].type == REGISTER) {
+		if (tokens[p].type == VARIABLE) // 变量
+			return getVariable(tokens[p].str, succuess);
+		if (tokens[p].type == REGISTER) { // 寄存器
 			int i;
 			uint32_t len = strlen(tokens[p].str);
 			if (len == 3) {
@@ -228,9 +231,6 @@ uint32_t eval(int p, int q, bool *succuess) {
 					assert(1);
 			}
 		}
-		if (tokens[p].type == VARIABLE)
-			return getVariable(tokens[p].str, succuess);
-		
 		return num;
 	}
 	else if (check_parentheses(p, q) == true)
