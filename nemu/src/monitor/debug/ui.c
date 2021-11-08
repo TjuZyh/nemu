@@ -36,12 +36,18 @@ static int cmd_q(char *args) {
 	return -1;
 }
 
-// TODO  test
-static int cmd_info(char *args){
-	return -1;
-}
-
 static int cmd_help(char *args);
+
+static int cmd_si(char *args){ // 单步执行
+	char *arg = strtok(NULL, " "); // 以空格为分割符分割字符串，获取命令中的步数。
+	int step; // 执行步数
+	if(arg == NULL) // 输入为空，默认执行1步
+		step = 1;
+	else
+		step = atoi(arg);
+	cpu_exec(step);
+	return 0;
+}
 
 static struct {
 	char *name;
@@ -51,9 +57,8 @@ static struct {
 	{ "help", "Display informations about all supported commands", cmd_help },
 	{ "c", "Continue the execution of the program", cmd_c },
 	{ "q", "Exit NEMU", cmd_q },
-	{"info", "test",cmd_info},//TODO:  test
-
 	/* TODO: Add more commands */
+	{"si", "单步执行", cmd_si}
 
 };
 
