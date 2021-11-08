@@ -76,6 +76,22 @@ static int cmd_info(char *args){ // 打印寄存器状态
 	return 0;
 }
 
+static int cmd_x(char *args){ // 扫描内存。命令格式 x N EXPR，N是扫描长度，EXPR是扫描的起始地址。
+	char *N = strtok(NULL, " "); // 获得命令中的扫描长度
+	char *EXPR = strtok(NULL, " "); // 获得命令中的扫描的起始地址
+	int len = atoi(N);
+	lnaddr_t address;
+	sscanf(EXPR, "%x", &address);
+	printf("0x%x: ", address);
+	int i;
+	for(i = 0; i < len; ++i){
+		printf("%08x ", lnaddr_read(address, 4));
+		address += 4;
+	}
+	printf("\n");
+	return 0;
+}
+
 static struct {
 	char *name;
 	char *description;
@@ -86,8 +102,9 @@ static struct {
 	{ "q", "Exit NEMU", cmd_q },
 	/* TODO: Add more commands */
 	{"si", "单步执行", cmd_si},
-	{"info", "打印寄存器状态", cmd_info} // 输入命令 info r 读寄存器 
-										// 输入命令 info w 写寄存器（未开发）
+	{"info", "打印寄存器状态", cmd_info}, // 输入命令 info r 读寄存器 
+										 // 输入命令 info w 写寄存器（未开发）
+	{"x", "扫描内存", cmd_x}   
 
 };
 
