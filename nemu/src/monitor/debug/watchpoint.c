@@ -27,7 +27,7 @@ WP *new_wp(char *args){
 	free_ = free_ -> next;
 	
 	using_wp -> type = 'w';
-	using_wp -> using_value = 1;
+	using_wp -> using = 1;
 	strcpy(using_wp->expression, args);
 	bool success;
 	using_wp -> old_value = expr(args, &success);
@@ -75,4 +75,16 @@ void free_wp(WP* wp){
 			qwq->next = wp;
 		}
 	}
+}
+
+WP* find_n(int n){
+	if((n < 0) || (NR_WP <= n)) {
+		printf("这个监视点不存在。\n"); 
+		return 0;
+	}
+	if(wp_pool[n].using == 0) {
+		printf("这个监视点未被使用。\n"); 
+		return 0;
+	}
+	return &wp_pool[n];
 }

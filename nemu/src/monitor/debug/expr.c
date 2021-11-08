@@ -131,7 +131,7 @@ static bool make_token(char *e) {
 }
 
 uint32_t getVariable(char *args, bool *success){
-	printf("功能待开发\n");
+	printf("功能待开发。\n");
 	return -1;
 }
 

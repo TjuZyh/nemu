@@ -72,7 +72,7 @@ static int cmd_info(char *args){ // 打印寄存器状态
 		*/
 	}
 	else if(*arg == 'w'){
-		printf("命令待开发\n");
+		printf("功能待开发。\n");
 	}
 	return 0;
 }
@@ -105,6 +105,16 @@ static int cmd_p(char *args){ // 表达式求值
 	return 0;
 }
 
+static int cmd_w(char *args){ // 增加监视点
+	new_wp(args);
+	return 0;
+}
+
+static int cmd_d(char *args){ // 删除监视点
+	free_wp(find_n(atoi(args)));
+	return 0;
+}
+
 static struct {
 	char *name;
 	char *description;
@@ -118,7 +128,9 @@ static struct {
 	{ "info", "打印寄存器状态", cmd_info}, // 输入命令 info r 读寄存器 
 										 // 输入命令 info w 写寄存器（未开发）
 	{ "x", "扫描内存", cmd_x},
-	{ "p", "表达式求值", cmd_p}
+	{ "p", "表达式求值", cmd_p},
+	{ "w", "增加监视点", cmd_w},
+	{ "d", "删除监视点", cmd_d},
 };
 
 #define NR_CMD (sizeof(cmd_table) / sizeof(cmd_table[0]))
