@@ -112,7 +112,8 @@ static int cmd_w(char *args){ // 增加监视点
 
 static int cmd_d(char *args){ // 删除监视点
 	char* arg = strtok(NULL, " ");
-	free_wp(find_n(atoi(arg)));
+	WP* w = find_n(atoi(arg));
+	free_wp(w);
 	return 0;
 }
 
