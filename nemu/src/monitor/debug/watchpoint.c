@@ -63,7 +63,7 @@ void free_wp(WP* wp){ // 删除一个监视点
 	else{
 		WP *qwq = head;
 		while (qwq->next != wp) 
-			qwq = qwq->next; 	// qwq->next == wp
+			qwq = qwq->next; 
 		qwq->next = wp->next;
 		wp->next = 0;
 		if(!free_) 
