@@ -99,8 +99,10 @@ static bool make_token(char *e) {
 				 * to record the token in the array `tokens'. For certain types
 				 * of tokens, some extra actions should be performed.
 				 */
-				if (substr_len > 32) 
+				if (substr_len > 32) {
 					printf("表达式错误。\n");
+					assert(0);
+				}
 				if (rules[i].token_type == NOTYPE)
 					break;
 				if (rules[i].token_type == REGISTER) {
@@ -130,13 +132,14 @@ static bool make_token(char *e) {
 	return true; 
 }
 
-uint32_t getVariable(char *args, bool *success){
-	printf("功能待开发。\n");
+/*
+uint32_t getVariable(char *args, bool *success){ // 功能待开发
 	return -1;
 }
+*/
 
 // 括号匹配函数
-int check_parentheses(int p, int q) { // 括号匹配返回为1，括号匹配但两边无括号为2，括号非法为0
+int check_parentheses(int p, int q) {
 	int i, bracket_num = 0;
 	if (tokens[p].type != '(' || tokens[q].type != ')')
 		return false;
@@ -196,7 +199,8 @@ uint32_t eval(int p, int q, bool *succuess) {
 		if (tokens[p].type == HEX) // 十六进制数
 			sscanf(tokens[p].str, "%x", &num);
 		if (tokens[p].type == VARIABLE) // 变量
-			return getVariable(tokens[p].str, succuess);
+			printf("功能待开发。\n");
+			// return getVariable(tokens[p].str, succuess);
 		if (tokens[p].type == REGISTER) { // 寄存器
 			int i;
 			uint32_t len = strlen(tokens[p].str);
