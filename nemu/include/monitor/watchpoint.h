@@ -18,6 +18,7 @@ int change();
 void info_w();
 WP* new_wp(char *args);
 void free_wp(WP* wp);
+void delete_wp(int n);
 WP* find_n(int n);
 
 #endif

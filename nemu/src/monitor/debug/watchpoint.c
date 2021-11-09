@@ -45,7 +45,6 @@ WP *new_wp(char *args){ // 新增一个监视点
 	return using_wp;
 }
 
-/*
 void free_wp(WP* wp){ // 删除一个监视点
 	if(wp == 0)
 		return;
@@ -77,45 +76,10 @@ void free_wp(WP* wp){ // 删除一个监视点
 		}
 	}
 }
-*/
-
-void free_wp(WP *wp){
-	WP *q, *p;
-	p = free_;
-	if(p == NULL){
-		free_ = wp;
-		p = free_;
-	}
-	else{
-		while(p->next != NULL)
-			p = p->next;
-		p -> next = wp;
-	}
-	q = head;
-	if(head == NULL)assert(0);
-	if(head->no == wp->no){
-		head = head->next;
-	}
-	else{
-		while(q->next->no != wp->no && q->next!=NULL){
-			q=q->next;
-		}
-		if(q->next == NULL && q->no==wp->no)
-			printf("Wrong!");
-		else if(q->no == wp->no)
-		 q->next = q->next->next;
-		 else 
-		 	assert(0);
-	}
-	wp->next = NULL;
-	wp->value = 0;
-	 wp->using = 0;
-	wp->expression[0] = '\0';
-}
 
 void delete_wp(int n){
 	WP *q;
-	q=&wp_pool[n];
+	q = &wp_pool[n];
 	free_wp(q);
 }
 
