@@ -78,12 +78,6 @@ void free_wp(WP* wp){ // 删除一个监视点
 	}
 }
 
-void delete_wp(int n){
-	WP *q;
-	q = &wp_pool[n];
-	free_wp(q);
-}
-
 WP* find_n(int n){
 	if((n < 0) || (NR_WP <= n)) {
 		printf("命令错误。\n"); 
