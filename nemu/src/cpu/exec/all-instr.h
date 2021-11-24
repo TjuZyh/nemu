@@ -6,6 +6,7 @@
 #include "data-mov/cltd.h"
 
 #include "call-jump-ret/call.h"
+#include "call-jump-ret/ja.h"
 
 
 #include "arith/adc.h"
