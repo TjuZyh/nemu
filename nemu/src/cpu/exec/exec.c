@@ -79,7 +79,7 @@ make_group(group4,
 
 /* 0xff */
 make_group(group5,
-	inv, dec_rm_v, inv, inv, 
+	inv, dec_rm_v, call_rm_v, inv, 
 	jmp_rm_l, inv, inv, inv)
 
 make_group(group6,

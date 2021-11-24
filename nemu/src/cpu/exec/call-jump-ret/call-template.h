@@ -22,7 +22,6 @@ make_helper(concat(call_i_, SUFFIX)) {
     return len + 1;
 } 
 
-/*
 make_helper(concat(call_rm_, SUFFIX)){
     int len = concat(decode_rm_, SUFFIX)(cpu.eip + 1);
 	reg_l(R_ESP) -= DATA_BYTE;
@@ -32,7 +31,5 @@ make_helper(concat(call_rm_, SUFFIX)){
 	cpu.eip = imm - len - 1;
 	return len + 1;
 }
-*/
-
 
 #include "cpu/exec/template-end.h"
