@@ -12,24 +12,6 @@
 #include "data-mov/movsx.h"
 #include "data-mov/lgdt.h"
 
-/*
-#include "call-jump-ret/call.h"
-#include "call-jump-ret/je.h"
-#include "call-jump-ret/ret.h"
-#include "call-jump-ret/jmp.h"
-#include "call-jump-ret/jbe.h"
-#include "call-jump-ret/jne.h"
-#include "call-jump-ret/jle.h"
-#include "call-jump-ret/jg.h"
-#include "call-jump-ret/jl.h"
-#include "call-jump-ret/jge.h"
-#include "call-jump-ret/ja.h"
-#include "call-jump-ret/js.h"
-#include "call-jump-ret/jns.h"
-#include "call-jump-ret/jb.h"
-#include "call-jump-ret/jae.h"
-*/
-
 #include "control/call.h"
 #include "control/je.h"
 #include "control/ret.h"
