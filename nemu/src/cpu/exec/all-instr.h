@@ -28,6 +28,24 @@
 #include "call-jump-ret/jb.h"
 #include "call-jump-ret/jae.h"
 
+/*
+#include "control/call.h"
+#include "control/je.h"
+#include "control/ret.h"
+#include "control/jmp.h"
+#include "control/jbe.h"
+#include "control/jne.h"
+#include "control/jle.h"
+#include "control/jg.h"
+#include "control/jl.h"
+#include "control/jge.h"
+#include "control/ja.h"
+#include "control/js.h"
+#include "control/jns.h"
+#include "control/jb.h"
+#include "control/jae.h"
+*/
+
 #include "arith/dec.h"
 #include "arith/inc.h"
 #include "arith/neg.h"
