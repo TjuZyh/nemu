@@ -104,7 +104,7 @@ typedef struct {
 			uint32_t s:		1;
 			uint32_t dpl:	2;
 			uint32_t p:		1;
-			uint32_t limits:4;
+			uint32_t limit2:4;
 			uint32_t avl:	1;
 			uint32_t :		1;
 			uint32_t x:		1;
