@@ -6,8 +6,15 @@ static void do_execute () {
 	DATA_TYPE result = op_src->val + 1;
 	OPERAND_W(op_src, result);
 
-        update_eflags_pf_zf_sf((DATA_TYPE_S)result);
-	cpu.eflags.OF = (result == 0x80000000);
+    /* TODO: Update EFLAGS. */
+	cpu.eflags.ZF = !result;
+    cpu.eflags.SF = result >> ((DATA_BYTE << 3) - 1);
+    cpu.eflags.OF = (result < op_src -> val);
+    result ^= result >> 4;
+    result ^= result >> 2;
+    result ^= result >> 1;
+    result &= 1;
+    cpu.eflags.PF = !result;
 
 	print_asm_template1();
 }
