@@ -5,7 +5,6 @@
 static void do_execute () {
 	DATA_TYPE_S imm = op_src -> val;
     print_asm("je\t%x", cpu.eip + 1 + DATA_BYTE + imm);
-    // printf("cpu.eflags.ZF%d\n", cpu.eflags.ZF);
     if (cpu.eflags.ZF == 1) cpu.eip += imm;
 }
 
