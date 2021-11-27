@@ -59,12 +59,13 @@ clean: clean-cpp
 # USERPROG := obj/testcase/bit
 
 # USERPROG := obj/testcase/bubble-sort
-USERPROG := obj/testcase/fact
+# USERPROG := obj/testcase/fact
 # SERPROG := obj/testcase/fib
 
-# USERPROG := obj/testcase/gotbaha
+USERPROG := obj/testcase/gotbaha
 # USERPROG := obj/testcase/hello-inline-asm
 # USERPROG := obj/testcase/hello-str # bad
+
 # USERPROG := obj/testcase/hello
 # USERPROG := obj/testcase/if-else
 # USERPROG := obj/testcase/integral
