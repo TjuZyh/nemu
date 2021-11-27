@@ -64,7 +64,7 @@ clean: clean-cpp
 
 # USERPROG := obj/testcase/gotbaha
 # USERPROG := obj/testcase/hello-inline-asm # bad
-# USERPROG := obj/testcase/hello-str # bad
+USERPROG := obj/testcase/hello-str # bad
 
 # USERPROG := obj/testcase/hello # bad
 # USERPROG := obj/testcase/if-else
@@ -76,7 +76,7 @@ clean: clean-cpp
 
 # USERPROG := obj/testcase/max
 # USERPROG := obj/testcase/min3
-USERPROG := obj/testcase/mov-c
+# USERPROG := obj/testcase/mov-c
 
 # USERPROG := obj/testcase/movsx
 # USERPROG := obj/testcase/mul-longlong
