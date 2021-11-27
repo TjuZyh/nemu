@@ -10,7 +10,7 @@ LIB_COMMON_DIR := lib-common
 LIBC_INC_DIR := $(LIB_COMMON_DIR)/uclibc/include
 LIBC_LIB_DIR := $(LIB_COMMON_DIR)/uclibc/lib
 LIBC := $(LIBC_LIB_DIR)/libc.a
-#FLOAT := obj/$(LIB_COMMON_DIR)/FLOAT/FLOAT.a
+FLOAT := obj/$(LIB_COMMON_DIR)/FLOAT/FLOAT.a
 
 include config/Makefile.git
 include config/Makefile.build
@@ -65,7 +65,7 @@ clean: clean-cpp
 # USERPROG := obj/testcase/gotbaha
 # USERPROG := obj/testcase/hello-inline-asm # bad
 
-USERPROG := obj/testcase/hello-str # bad
+# USERPROG := obj/testcase/hello-str # bad
 
 # USERPROG := obj/testcase/hello # bad
 # USERPROG := obj/testcase/if-else
@@ -85,7 +85,7 @@ USERPROG := obj/testcase/hello-str # bad
 
 # USERPROG := obj/testcase/prime
 # USERPROG := obj/testcase/print-FLOAT # bad
-# USERPROG := obj/testcase/quadratic-eq # bad
+ USERPROG := obj/testcase/quadratic-eq 
 
 # USERPROG := obj/testcase/quick-sort
 # USERPROG := obj/testcase/select-sort
