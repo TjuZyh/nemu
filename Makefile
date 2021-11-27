@@ -53,7 +53,40 @@ clean: clean-cpp
 
 ##### some convinient rules #####
 
+# 测试testcase中的用例
 USERPROG := obj/testcase/add-longlong
+# USERPROG := obj/testcase/add
+# USERPROG := obj/testcase/bit
+# USERPROG := obj/testcase/bubble-sort
+# USERPROG := obj/testcase/fact
+# USERPROG := obj/testcase/fib
+# USERPROG := obj/testcase/gotbaha
+# USERPROG := obj/testcase/hello-inline-asm
+# USERPROG := obj/testcase/hello
+# USERPROG := obj/testcase/if-else
+# USERPROG := obj/testcase/integral
+# USERPROG := obj/testcase/leap-year
+# USERPROG := obj/testcase/matrix-mul-small
+# USERPROG := obj/testcase/matrix-mul
+# USERPROG := obj/testcase/max
+# USERPROG := obj/testcase/min3
+# USERPROG := obj/testcase/mov-c
+# USERPROG := obj/testcase/movsx.c
+# USERPROG := obj/testcase/mul-longlong
+# USERPROG := obj/testcase/pascal
+# USERPROG := obj/testcase/prime
+# USERPROG := obj/testcase/print-FLOAT
+# USERPROG := obj/testcase/quadratic-eq
+# USERPROG := obj/testcase/quick-sort
+# USERPROG := obj/testcase/select-sort
+# USERPROG := obj/testcase/shuixianhua
+# USERPROG := obj/testcase/string
+# USERPROG := obj/testcase/struct
+# USERPROG := obj/testcase/sub-longlong
+# USERPROG := obj/testcase/switch
+# USERPROG := obj/testcase/to-lower-case
+# USERPROG := obj/testcase/wanshu
+
 ENTRY := $(USERPROG)
 
 entry: $(ENTRY)
