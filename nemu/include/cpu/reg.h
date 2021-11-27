@@ -66,7 +66,7 @@ typedef struct {
 			uint32_t VM		:1;
 			uint32_t		:14;
 		};
-		uint32_t EFLAGS;
+		uint32_t val;
 	} eflags;
 
 	struct GDTR{
