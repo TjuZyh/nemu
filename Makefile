@@ -76,11 +76,12 @@ clean: clean-cpp
 
 # USERPROG := obj/testcase/max
 # USERPROG := obj/testcase/min3
-USERPROG := obj/testcase/mov-c
+# USERPROG := obj/testcase/mov-c
 
-# USERPROG := obj/testcase/movsx.c
+USERPROG := obj/testcase/movsx
 # USERPROG := obj/testcase/mul-longlong
 # USERPROG := obj/testcase/pascal
+
 # USERPROG := obj/testcase/prime
 # USERPROG := obj/testcase/print-FLOAT
 # USERPROG := obj/testcase/quadratic-eq
