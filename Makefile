@@ -56,12 +56,14 @@ clean: clean-cpp
 # 测试testcase中的用例
 # USERPROG := obj/testcase/add-longlong
 # USERPROG := obj/testcase/add
-USERPROG := obj/testcase/bit
+# USERPROG := obj/testcase/bit
+
 # USERPROG := obj/testcase/bubble-sort
 # USERPROG := obj/testcase/fact
 # USERPROG := obj/testcase/fib
 # USERPROG := obj/testcase/gotbaha
 # USERPROG := obj/testcase/hello-inline-asm
+USERPROG := obj/testcase/hello-str
 # USERPROG := obj/testcase/hello
 # USERPROG := obj/testcase/if-else
 # USERPROG := obj/testcase/integral
