@@ -64,8 +64,7 @@ clean: clean-cpp
 
 # USERPROG := obj/testcase/gotbaha
 # USERPROG := obj/testcase/hello-inline-asm # bad
-
-# USERPROG := obj/testcase/hello-str # bad
+USERPROG := obj/testcase/hello-str # bad
 
 # USERPROG := obj/testcase/hello # bad
 # USERPROG := obj/testcase/if-else
@@ -85,7 +84,7 @@ clean: clean-cpp
 
 # USERPROG := obj/testcase/prime
 # USERPROG := obj/testcase/print-FLOAT # bad
- USERPROG := obj/testcase/quadratic-eq 
+ # USERPROG := obj/testcase/quadratic-eq 
 
 # USERPROG := obj/testcase/quick-sort
 # USERPROG := obj/testcase/select-sort
