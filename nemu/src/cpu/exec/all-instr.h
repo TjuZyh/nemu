@@ -54,6 +54,7 @@
 #include "logic/std.h"
 #include "logic/cld.h"
 
+/*
 #include "logic/setcc/seta.h"
 #include "logic/setcc/setae.h"
 #include "logic/setcc/setb.h"
@@ -65,7 +66,8 @@
 #include "logic/setcc/seto.h"
 #include "logic/setcc/setp.h"
 #include "logic/setcc/sets.h"
-
+*/
+#include "logic/setcc.h"
 
 
 #include "string/rep.h"
