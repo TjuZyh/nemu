@@ -46,13 +46,27 @@
 #include "logic/not.h"
 #include "logic/xor.h"
 #include "logic/sar.h"
+
 #include "logic/shl.h"
 #include "logic/shr.h"
 #include "logic/shrd.h"
 #include "logic/test.h"
-#include "logic/setne.h"
 #include "logic/std.h"
 #include "logic/cld.h"
+
+#include "logic/seta.h"
+#include "logic/setae.h"
+#include "logic/setb.h"
+#include "logic/setbe.h"
+#include "logic/sete.h"
+#include "logic/setg.h"
+#include "logic/setge.h"
+#include "logic/setne.h"
+#include "logic/seto.h"
+#include "logic/setp.h"
+#include "logic/sets.h"
+
+
 
 #include "string/rep.h"
 #include "string/movs.h"
