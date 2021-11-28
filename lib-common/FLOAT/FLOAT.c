@@ -68,7 +68,10 @@ FLOAT f2F(float a) {
 	if (exp < 0) last >>= -exp;
 	if (exp > 0) last <<= exp;
 
-	if (sign) return -last;else return last;
+	if (sign) 
+		return -last;
+	else 
+		return last;
 }
 
 FLOAT Fabs(FLOAT a) {
