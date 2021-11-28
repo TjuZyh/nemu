@@ -6,8 +6,8 @@
 typedef int FLOAT;
 
 static inline int F2int(FLOAT a) {
-	int ret = a & 0xffff0000;
-	return ret >> 16;
+	int result = a & 0xffff0000;
+	return result  >> 16;
 }
 
 static inline FLOAT int2F(int a) {

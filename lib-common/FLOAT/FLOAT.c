@@ -57,8 +57,10 @@ FLOAT f2F(float a) {
 	int last = b & 0x7fffff;	
 	
 	if(exp == 255) {
-		if (sign) return -0x7fffffff;
-		else return 0x7fffffff;
+		if (sign) 
+			return -0x7fffffff;
+		else 
+			return 0x7fffffff;
 	}
 	
 	if(exp == 0) return 0;
