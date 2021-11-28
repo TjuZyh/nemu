@@ -54,17 +54,17 @@
 #include "logic/std.h"
 #include "logic/cld.h"
 
-#include "logic/seta.h"
-#include "logic/setae.h"
-#include "logic/setb.h"
-#include "logic/setbe.h"
-#include "logic/sete.h"
-#include "logic/setg.h"
-#include "logic/setge.h"
-#include "logic/setne.h"
-#include "logic/seto.h"
-#include "logic/setp.h"
-#include "logic/sets.h"
+#include "logic/setcc/seta.h"
+#include "logic/setcc/setae.h"
+#include "logic/setcc/setb.h"
+#include "logic/setcc/setbe.h"
+#include "logic/setcc/sete.h"
+#include "logic/setcc/setg.h"
+#include "logic/setcc/setge.h"
+#include "logic/setcc/setne.h"
+#include "logic/setcc/seto.h"
+#include "logic/setcc/setp.h"
+#include "logic/setcc/sets.h"
 
 
 
