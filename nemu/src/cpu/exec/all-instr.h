@@ -13,20 +13,10 @@
 #include "data-mov/lgdt.h"
 
 #include "control/call.h"
-#include "control/je.h"
-#include "control/ret.h"
+#include "control/jcc.h"
 #include "control/jmp.h"
-#include "control/jbe.h"
-#include "control/jne.h"
-#include "control/jle.h"
-#include "control/jg.h"
-#include "control/jl.h"
-#include "control/jge.h"
-#include "control/ja.h"
-#include "control/js.h"
-#include "control/jns.h"
-#include "control/jb.h"
-#include "control/jae.h"
+#include "control/ret.h"
+
 
 #include "arith/dec.h"
 #include "arith/inc.h"
@@ -46,29 +36,13 @@
 #include "logic/not.h"
 #include "logic/xor.h"
 #include "logic/sar.h"
-
+#include "logic/setcc.h"
 #include "logic/shl.h"
 #include "logic/shr.h"
 #include "logic/shrd.h"
 #include "logic/test.h"
 #include "logic/std.h"
 #include "logic/cld.h"
-
-/*
-#include "logic/setcc/seta.h"
-#include "logic/setcc/setae.h"
-#include "logic/setcc/setb.h"
-#include "logic/setcc/setbe.h"
-#include "logic/setcc/sete.h"
-#include "logic/setcc/setg.h"
-#include "logic/setcc/setge.h"
-#include "logic/setcc/setne.h"
-#include "logic/setcc/seto.h"
-#include "logic/setcc/setp.h"
-#include "logic/setcc/sets.h"
-*/
-#include "logic/setcc.h"
-
 
 #include "string/rep.h"
 #include "string/movs.h"
