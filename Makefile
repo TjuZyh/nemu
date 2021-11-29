@@ -64,9 +64,9 @@ clean: clean-cpp
 
 # USERPROG := obj/testcase/gotbaha
 # USERPROG := obj/testcase/hello-inline-asm # bad
-USERPROG := obj/testcase/hello-str 
+# USERPROG := obj/testcase/hello-str 
 
-# USERPROG := obj/testcase/hello # bad
+USERPROG := obj/testcase/hello # bad
 # USERPROG := obj/testcase/if-else
 # USERPROG := obj/testcase/integral 
 
