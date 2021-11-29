@@ -64,11 +64,11 @@ clean: clean-cpp
 
 # USERPROG := obj/testcase/gotbaha
 # USERPROG := obj/testcase/hello-inline-asm # bad
-# USERPROG := obj/testcase/hello-str 
+USERPROG := obj/testcase/hello-str 
 
 # USERPROG := obj/testcase/hello # bad
 # USERPROG := obj/testcase/if-else
-USERPROG := obj/testcase/integral # bad
+# USERPROG := obj/testcase/integral 
 
 # USERPROG := obj/testcase/leap-year
 # USERPROG := obj/testcase/matrix-mul-small
