@@ -19,7 +19,7 @@ make_helper (concat(call_rm_, SUFFIX)){
 	cpu.eip = op_src->val - len - 1;
 	print_asm("call *%s",op_src->str);
 
-	return len + 1;	
+	return len + 1;	 
 }
 
 #include "cpu/exec/template-end.h"
