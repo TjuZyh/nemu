@@ -1,5 +1,5 @@
-#ifndef __LEAVE_H__
-#define __LEAVE_H__
+#ifndef _LEAVE_H_
+#define _LEAVE_H_
 
 make_helper(leave_r_v);
 

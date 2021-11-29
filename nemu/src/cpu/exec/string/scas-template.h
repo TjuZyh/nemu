@@ -3,30 +3,18 @@
 #define instr scas
 
 make_helper(concat(scas_, SUFFIX)) {
-    current_sreg = R_ES;
-    uint32_t t2 = MEM_R(reg_l(R_EDI));
-    uint32_t t1 = REG(R_EAX);
+	DATA_TYPE dest = REG(R_EAX);
+	DATA_TYPE src = MEM_R(cpu.edi);;
+	DATA_TYPE result = dest - src;
 
-    uint32_t result = t1 - t2;
+	update_eflags_pf_zf_sf((DATA_TYPE_S)result);
+	cpu.eflags.CF = result > dest;
+	cpu.eflags.OF = MSB((dest ^ src) & (dest ^ result));
 
-    if (cpu.eflags.DF == 0) reg_l(R_EDI) += DATA_BYTE;
-    else reg_l(R_EDI) -= DATA_BYTE;
+	cpu.edi += (cpu.eflags.DF ? -DATA_BYTE : DATA_BYTE);
 
-	/* TODO: Update EFLAGS. */
-    cpu.eflags.ZF = !result;
-    cpu.eflags.SF = result >> ((DATA_BYTE << 3) - 1);
-    cpu.eflags.CF = (t1 < t2);
-    int tmp1 = (t1) >> ((DATA_BYTE << 3) - 1);
-    int tmp2 = (t2) >> ((DATA_BYTE << 3) - 1);
-    cpu.eflags.OF = (tmp1 != tmp2 && tmp2 == cpu.eflags.SF);
-    result ^= result >> 4;
-    result ^= result >> 2;
-    result ^= result >> 1;
-    result &= 1;
-    cpu.eflags.PF = !result;
-
-	print_asm("scas");
-    return 1;
+	print_asm("scas" str(SUFFIX) " %%es:(%%edi),%%%s", REG_NAME(R_EAX));
+	return 1;
 }
 
 #include "cpu/exec/template-end.h"
