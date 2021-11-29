@@ -20,9 +20,10 @@
 #include "arith/sub.h"
 #include "arith/add.h"
 
-#include "control/jmp.h"
 #include "control/call.h"
+#include "control/jmp.h"
 #include "control/jcc.h"
+#include "control/jmp.h"
 #include "control/return.h"
 
 #include "logic/and.h"
