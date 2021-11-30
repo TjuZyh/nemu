@@ -1,5 +1,6 @@
 #include "nemu.h"
 #include <elf.h>
+#include "monitor/elf.h"
 
 /* We use the POSIX regex functions to process regular expressions.
  * Type 'man regex' for more information about POSIX regex functions.
@@ -29,9 +30,6 @@ static struct rule {
 	/* TODO: Add more rules.
 	 * Pay attention to the precedence level of different rules.
 	 */
-	{"\\b0[xX][0-9a-fA-F]+\\b", HEX, 0},
-	{"\\b[0-9]+\\b", DEX, 0},
-	{"\\$[a-zA-Z]+", REGISTER, 0},
 	{" +", NOTYPE, 0}, // spaces
 	{"\\+", '+', 4},   // 加
 	{"-", '-', 4},	   // 减
@@ -44,7 +42,10 @@ static struct rule {
 	{"\\|\\|", OR, 1}, // 或
 	{"\\(", '(', 7},
 	{"\\)", ')', 7},
-	{"[a-zA-Z][A-Za-z0-9_]*", VARIABLE, 0},
+	{"\\b0[xX][0-9a-fA-F]+\\b", HEX, 0}, // 十六进制数
+	{"\\b[0-9]+\\b", DEX, 0},	// 十进制数
+	{"\\$[a-zA-Z]+", REGISTER, 0}, // 寄存器
+	{"[a-zA-Z][A-Za-z0-9_]*", VARIABLE, 0}, // 变量
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
@@ -132,12 +133,6 @@ static bool make_token(char *e) {
 	return true; 
 }
 
-/*
-uint32_t getVariable(char *args, bool *success){ // 功能待开发
-	return -1;
-}
-*/
-
 // 括号匹配函数
 int check_parentheses(int p, int q) {
 	int i, bracket_num = 0;
@@ -196,12 +191,11 @@ uint32_t eval(int p, int q, bool *succuess) {
 		uint32_t num = 0;
 		if (tokens[p].type == DEX) // 十进制数
 			sscanf(tokens[p].str, "%d", &num);
-		if (tokens[p].type == HEX) // 十六进制数
+		else if (tokens[p].type == HEX) // 十六进制数
 			sscanf(tokens[p].str, "%x", &num);
-		if (tokens[p].type == VARIABLE) // 变量
-			printf("功能待开发。\n");
-			// return getVariable(tokens[p].str, succuess);
-		if (tokens[p].type == REGISTER) { // 寄存器
+		else if (tokens[p].type == VARIABLE) // 变量
+			return getVariable(tokens[p].str, succuess);
+		else if (tokens[p].type == REGISTER) { // 寄存器
 			int i;
 			uint32_t len = strlen(tokens[p].str);
 			if (len == 3) {

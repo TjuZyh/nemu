@@ -7,4 +7,4 @@ void getFrame(swaddr_t, char*);
 uint32_t getVariable(char*, bool*);
 void getTable();
 
-#endif
+#endif  
