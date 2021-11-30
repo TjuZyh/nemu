@@ -18,6 +18,18 @@
 
 #include "control/jmp.h"
 #include "control/call.h"
+#include "control/ja.h"
+#include "control/jbe.h"
+#include "control/je.h"
+#include "control/jg.h"
+#include "control/jge.h"
+#include "control/jl.h"
+#include "control/jle.h"
+#include "control/jne.h"
+#include "control/jns.h"
+#include "control/js.h"
+#include "control/ret.h"
+
 
 #include "logic/and.h"
 #include "logic/or.h"
