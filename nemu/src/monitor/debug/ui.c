@@ -96,9 +96,9 @@ static int cmd_x(char *args){ // 扫描内存。命令格式 x N EXPR，N是扫�
 static int cmd_p(char *args){ // 表达式求值
 	if(args == NULL)
 		printf("未输入表达式。\n");
-	bool flag = false;
-	uint32_t res = expr(args, &flag);
-	if(flag)
+	bool success = false;
+	uint32_t res = expr(args, &success);
+	if(success)
 		printf("0x%x = %d\n", res, res);
 	else
 		printf("表达式错误。\n");

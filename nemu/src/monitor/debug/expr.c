@@ -17,7 +17,7 @@ enum {
 	NOTYPE = 256, EQ,
 
 	/* TODO: Add more token types */
-	NEQ, AND, OR, MINUS, POINTER, DEX, HEX, VARIABLE, REGISTER
+	NEQ, AND, OR, MINUS, POINTER, DEX, HEX, REGISTER, VARIABLE
 
 };
 
@@ -42,8 +42,8 @@ static struct rule {
 	{"\\|\\|", OR, 1}, // 或
 	{"\\(", '(', 7},
 	{"\\)", ')', 7},
-	{"\\b0[xX][0-9a-fA-F]+\\b", HEX, 0}, // 十六进制数
 	{"\\b[0-9]+\\b", DEX, 0},	// 十进制数
+	{"\\b0[xX][0-9a-fA-F]+\\b", HEX, 0}, // 十六进制数
 	{"\\$[a-zA-Z]+", REGISTER, 0}, // 寄存器
 	{"[a-zA-Z][A-Za-z0-9_]*", VARIABLE, 0}, // 变量
 };
@@ -72,7 +72,7 @@ void init_regex() {
 typedef struct token {
 	int type;
 	char str[32];
-	int prior;
+	int priority;
 } Token;
 
 Token tokens[32];
@@ -119,7 +119,7 @@ static bool make_token(char *e) {
 					tokens[nr_token].str[substr_len] = '\0';
 				}
 				tokens[nr_token].type = rules[i].token_type;
-				tokens[nr_token].prior = rules[i].prior;
+				tokens[nr_token].priority = rules[i].prior;
 				++nr_token;
 				break;
 			}
@@ -174,8 +174,8 @@ int dominant_operator(int p, int q) {
 				return -1;
 			
 		}
-		if (tokens[i].prior <= ls) {
-			ls = tokens[i].prior;
+		if (tokens[i].priority <= ls) {
+			ls = tokens[i].priority;
 			pos = i;
 		}
 	}
@@ -271,6 +271,7 @@ uint32_t expr(char *e, bool *success) {
 	}
 
 	/* TODO: Insert codes to evaluate the expression. */
+	/*
 	int i;
 	for (i = 0; i < nr_token; ++i) {
 		if (i == 0 || ((tokens[i - 1].type < DEX || tokens[i - 1].type > REGISTER) && tokens[i - 1].type != ')')) {
@@ -284,7 +285,23 @@ uint32_t expr(char *e, bool *success) {
 			}
 		}
 	}
+*/
 
+    int i = 0;
+    for (i = 0;i < nr_token; ++i) {
+        if (tokens[i].type == '*' && 
+                (i == 0 || 
+                    (tokens[i - 1].type != DEX && tokens[i - 1].type != HEX && tokens[i - 1].type != REGISTER && tokens[i - 1].type != VARIABLE  && tokens[i - 1].type !=')'))) {
+            tokens[i].type = POINTER;
+                tokens[i].priority = 6;
+            }
+        if (tokens[i].type == '-' && 
+                (i == 0 || 
+                    (tokens[i - 1].type != DEX && tokens[i - 1].type != HEX && tokens[i - 1].type != REGISTER && tokens[i - 1].type != VARIABLE  && tokens[i - 1].type !=')'))) {
+                tokens[i].type = MINUS;
+                tokens[i].priority = 6;
+            }
+    }
 	/* TODO: Insert codes to evaluate the expression. */
 	*success = true;
 	return eval(0, nr_token - 1, success);
