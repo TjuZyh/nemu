@@ -99,7 +99,7 @@ static int cmd_p(char *args){ // 表达式求值
 	bool success = false;
 	uint32_t res = expr(args, &success);
 	if(success)
-		printf("0x%x = %d\n", res, res);
+		printf("表达式结果：%d 0x%x\n", res, res);
 	else
 		printf("表达式错误。\n");
 	return 0;
