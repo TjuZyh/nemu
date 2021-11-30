@@ -271,22 +271,23 @@ uint32_t expr(char *e, bool *success) {
 	}
 
 	/* TODO: Insert codes to evaluate the expression. */
-	/*
+	
 	int i;
 	for (i = 0; i < nr_token; ++i) {
 		if (i == 0 || ((tokens[i - 1].type < DEX || tokens[i - 1].type > REGISTER) && tokens[i - 1].type != ')')) {
 			if (tokens[i].type == '*') {
 				tokens[i].type = POINTER;
-				tokens[i].prior = 6;
+				tokens[i].priority = 6;
 			}
 			if (tokens[i].type == '-') {
 				tokens[i].type = MINUS;
-				tokens[i].prior = 6;
+				tokens[i].priority = 6;
 			}
 		}
 	}
-*/
 
+
+/*
     int i = 0;
     for (i = 0;i < nr_token; ++i) {
         if (tokens[i].type == '*' && 
@@ -302,7 +303,7 @@ uint32_t expr(char *e, bool *success) {
                 tokens[i].priority = 6;
             }
     }
-	/* TODO: Insert codes to evaluate the expression. */
+	*/
 	*success = true;
 	return eval(0, nr_token - 1, success);
 }
