@@ -193,8 +193,11 @@ uint32_t eval(int p, int q, bool *succuess) {
 			sscanf(tokens[p].str, "%d", &num);
 		else if (tokens[p].type == HEX) // 十六进制数
 			sscanf(tokens[p].str, "%x", &num);
-		else if (tokens[p].type == VARIABLE) // 变量
+		else if (tokens[p].type == VARIABLE) {
+			// 变量
+			printf("寄存器\n");
 			return getVariable(tokens[p].str, succuess);
+		}
 		else if (tokens[p].type == REGISTER) { // 寄存器
 			int i;
 			uint32_t len = strlen(tokens[p].str);
@@ -271,23 +274,6 @@ uint32_t expr(char *e, bool *success) {
 	}
 
 	/* TODO: Insert codes to evaluate the expression. */
-	
-	/*
-	int i;
-	for (i = 0; i < nr_token; ++i) {
-		if (i == 0 || ((tokens[i - 1].type < DEX || tokens[i - 1].type > REGISTER) && tokens[i - 1].type != ')')) {
-			if (tokens[i].type == '*') {
-				tokens[i].type = POINTER;
-				tokens[i].priority = 6;
-			}
-			if (tokens[i].type == '-') {
-				tokens[i].type = MINUS;
-				tokens[i].priority = 6;
-			}
-		}
-	}
-	*/
-
     int i;
     for (i = 0;i < nr_token; ++i) {
         if (tokens[i].type == '*' && 
