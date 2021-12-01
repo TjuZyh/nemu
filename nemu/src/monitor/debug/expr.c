@@ -182,6 +182,7 @@ int dominant_operator(int p, int q) {
 	return pos;
 }
 
+/*
 uint32_t eval(int p, int q, bool *succuess) {
 	if (p > q) {
 		*succuess = false;
@@ -193,8 +194,7 @@ uint32_t eval(int p, int q, bool *succuess) {
 			sscanf(tokens[p].str, "%d", &num);
 		else if (tokens[p].type == HEX) // 十六进制数
 			sscanf(tokens[p].str, "%x", &num);
-		else if (tokens[p].type == VARIABLE) {
-			// 变量
+		else if (tokens[p].type == VARIABLE) { // 变量
 			return getVariable(tokens[p].str, succuess);
 		}
 		else if (tokens[p].type == REGISTER) { // 寄存器
@@ -264,6 +264,111 @@ uint32_t eval(int p, int q, bool *succuess) {
 		}
 	}
 	return -1;
+}
+*/
+
+uint32_t eval(int l, int r, bool *succuess) {
+  //Log("%d %d", l, r);
+  if (l > r) {
+    *succuess = false;
+    return 0;
+  } else if (l == r) {
+    uint32_t num = 0;
+    // printf("str: %d\n", tokens[l].type);
+    if (tokens[l].type == DEX)
+      sscanf(tokens[l].str, "%d", &num);
+    if (tokens[l].type == HEX)
+      sscanf(tokens[l].str, "%x", &num);
+    // printf("num %d\n", num);
+    if (tokens[l].type == REGISTER) {
+      int i;
+      uint32_t len = strlen(tokens[l].str);
+      if (len == 3) {
+        for (i = R_EAX; i <= R_EDI; ++ i)
+          if (!strcmp(tokens[l].str, regsl[i]))
+            break;
+        if (i > R_EDI)
+          if (!strcmp(tokens[l].str, "eip"))
+            num = cpu.eip;
+          else *succuess = false;
+        else num = reg_l(i);
+        //printf("NUM: %d\n", num);
+      }
+      if (len == 2) {
+        if (tokens[l].str[1] == 'x' || tokens[l].str[1] == 'p' || tokens[l].str[1] == 'i') {
+          for (i = R_AX; i <= R_DI; ++ i) {
+            if (!strcmp(tokens[l].str, regsw[i]))
+              break;
+          }
+          num = reg_w(i);
+        }
+        else if (tokens[l].str[1] == 'l' || tokens[l].str[1] == 'h') {
+          for (i = R_AL; i <= R_BH; ++ i) {
+            if (!strcmp(tokens[l].str, regsb[i]))
+              break;
+          }
+          num = reg_b(i);
+        }
+        else assert(1);
+      }
+    }
+    if (tokens[l].type == VARIABLE) {
+      //Log("%d", (int)(*succuess));
+      return getVariable(tokens[l].str, succuess);
+    }
+    return num;
+  }
+  else if (check_parentheses(l, r) == true) {
+    return eval(l + 1, r - 1, succuess);
+  }
+  else {
+    int op = dominant_operator(l, r);
+    //Log("op: %d", op);
+    if (op == -1) {
+      *succuess = false;
+      return -1;
+    }
+    if (l == op || tokens[op].type == POINTER || tokens[op].type == MINUS || tokens[op].type == '!') {
+      uint32_t ls = eval(l + 1, r, succuess);
+      //Log("ls: %d", ls);
+      switch (tokens[op].type) {
+        case POINTER:
+          return swaddr_read(ls, 4);
+        case MINUS:
+          return -ls;
+        case '!':
+          return !ls;
+        default:
+          *succuess = false;
+          return -1;
+          //Assert(1, "ERROER");
+      }
+    }
+    uint32_t val1 = eval(l, op - 1, succuess), val2 = eval(op + 1, r, succuess);
+    //Log("val1 %d, val2 %d, l %d, r %d", val1, val2, l, r);
+    switch (tokens[op].type) {
+      case '+':
+        return val1 + val2;
+      case '-':
+        return val1 - val2;
+      case '*':
+        return val1 * val2;
+      case '/':
+        return val1 / val2;
+      case EQ:
+        return val1 == val2;
+      case NEQ:
+        return val1 != val2;
+      case AND:
+        return val1 && val2;
+      case OR:
+        return val1 || val2;
+      default:
+        break;
+    }
+  }
+  //*succuess = false;
+  return -1;
 }
 
 uint32_t expr(char *e, bool *success) {
