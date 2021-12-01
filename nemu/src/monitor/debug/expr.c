@@ -267,118 +267,97 @@ uint32_t eval(int p, int q, bool *succuess) {
 }
 */
 
-uint32_t eval(int l, int r, bool *succuess) {
-  //Log("%d %d", l, r);
-  if (l > r) {
-    *succuess = false;
-    return 0;
-  } else if (l == r) {
-    uint32_t num = 0;
-    // printf("str: %d\n", tokens[l].type);
-    if (tokens[l].type == DEX)
-      sscanf(tokens[l].str, "%d", &num);
-    if (tokens[l].type == HEX)
-      sscanf(tokens[l].str, "%x", &num);
-    // printf("num %d\n", num);
-    if (tokens[l].type == REGISTER) {
-      int i;
-      uint32_t len = strlen(tokens[l].str);
-      if (len == 3) {
-        for (i = R_EAX; i <= R_EDI; ++ i)
-          if (!strcmp(tokens[l].str, regsl[i]))
-            break;
-        if (i > R_EDI)
-          if (!strcmp(tokens[l].str, "eip"))
-            num = cpu.eip;
-          else *succuess = false;
-        else num = reg_l(i);
-        //printf("NUM: %d\n", num);
-      }
-      if (len == 2) {
-        if (tokens[l].str[1] == 'x' || tokens[l].str[1] == 'p' || tokens[l].str[1] == 'i') {
-          for (i = R_AX; i <= R_DI; ++ i) {
-            if (!strcmp(tokens[l].str, regsw[i]))
-              break;
-          }
-          num = reg_w(i);
+
+uint32_t eval(int lp, int rp){
+    if(lp > rp) { Assert (lp > rp, "Wrong expression!\n"); return 0;}
+    
+    else if (lp == rp){
+        uint32_t num = 0;
+        if(tokens[lp].type == DEX)
+            sscanf(tokens[lp].str, "%d", &num);
+        else if (tokens[lp].type == HEX)
+            sscanf(tokens[lp].str, "%x", &num);
+        else if (tokens[lp].type == REGISTER){
+            if(strlen(tokens[lp].str) == 3){
+                int i;
+                for(i = R_EAX; i <= R_EDI; i++){
+                    if(strcmp(tokens[lp].str, regsl[i]) == 0) {num = reg_l(i);  break;}
+                }
+                if( i > R_EDI && strcmp(tokens[lp].str, "eip") == 0) num = cpu.eip;
+                    else Assert(1, "No such register, you may check for your spellings");
+            }
+            else if(strlen(tokens[lp].str) == 2){
+                int i;
+                if(tokens[lp].str[1] == 'x' || tokens[lp].str[1] == 'i' || tokens[lp].str[1] == 'p'){
+                    for(i = R_AX; i <= R_DI; i ++){
+                        if(strcmp(tokens[lp].str, regsw[i]) == 0) {num = reg_w(i);  break;}
+                        else Assert(1, "No such register, you may check for your spellings");
+                    }
+                }
+                else if(tokens[lp].str[1] == 'h' || tokens[lp].str[1] == 'l'){
+                    for(i = R_AL; i <= R_BH; i ++){
+                        if(strcmp(tokens[lp].str, regsb[i]) == 0) {num = reg_b(i);  break;}
+                        else Assert(1, "No such register, you may check for your spellings");
+                    }
+                }
+            }
         }
-        else if (tokens[l].str[1] == 'l' || tokens[l].str[1] == 'h') {
-          for (i = R_AL; i <= R_BH; ++ i) {
-            if (!strcmp(tokens[l].str, regsb[i]))
-              break;
-          }
-          num = reg_b(i);
+        else if (tokens[lp].type == VARIABLE) {
+            bool success = false;
+            num = getVariable(tokens[lp].str, &success);
+            if(!success) Assert(1, "wrong varibale");
         }
+
         else assert(1);
-      }
+        
+        return num;
     }
-    if (tokens[l].type == VARIABLE) {
-      //Log("%d", (int)(*succuess));
-      return getVariable(tokens[l].str, succuess);
+    
+    else if(check_parentheses(lp, rp) == 1){
+        return eval(lp + 1, rp - 1);
     }
-    return num;
-  }
-  else if (check_parentheses(l, r) == true) {
-    return eval(l + 1, r - 1, succuess);
-  }
-  else {
-    int op = dominant_operator(l, r);
-    //Log("op: %d", op);
-    if (op == -1) {
-      *succuess = false;
-      return -1;
+    else{
+        uint32_t dop;
+        dop = dominant_operator(lp, rp);
+        if(dop == lp || tokens[dop].type == MINUS || tokens[dop].type == POINTER
+                || tokens[dop].type == '!'){
+            int val;
+            val = eval(lp + 1, rp);
+            switch (tokens[dop].type) {
+                case MINUS: return -val;
+                case POINTER: return swaddr_read(val, 4);
+                case '!': return !val;
+                default: Assert(1, "Wrong expression!");
+            }
+        }
+        uint32_t val1, val2;
+        val1 = eval(lp, dop - 1); val2 = eval(dop + 1, rp);
+        
+        switch (tokens[dop].type) {
+            case '+': return val1 + val2;
+            case '-': return val1 - val2;
+            case '*': return val1 * val2;
+            case '/': return val1 / val2;
+            case OR: return val1 || val2;
+            case AND: return val1 && val2;
+            case EQ: return val1 == val2;
+            case NEQ: return val1 != val2;
+            default: Assert(1, "Wrong expression!");
+        }
     }
-    if (l == op || tokens[op].type == POINTER || tokens[op].type == MINUS || tokens[op].type == '!') {
-      uint32_t ls = eval(l + 1, r, succuess);
-      //Log("ls: %d", ls);
-      switch (tokens[op].type) {
-        case POINTER:
-          return swaddr_read(ls, 4);
-        case MINUS:
-          return -ls;
-        case '!':
-          return !ls;
-        default:
-          *succuess = false;
-          return -1;
-          //Assert(1, "ERROER");
-      }
-    }
-    uint32_t val1 = eval(l, op - 1, succuess), val2 = eval(op + 1, r, succuess);
-    //Log("val1 %d, val2 %d, l %d, r %d", val1, val2, l, r);
-    switch (tokens[op].type) {
-      case '+':
-        return val1 + val2;
-      case '-':
-        return val1 - val2;
-      case '*':
-        return val1 * val2;
-      case '/':
-        return val1 / val2;
-      case EQ:
-        return val1 == val2;
-      case NEQ:
-        return val1 != val2;
-      case AND:
-        return val1 && val2;
-      case OR:
-        return val1 || val2;
-      default:
-        break;
-    }
-  }
-  //*succuess = false;
-  return -1;
+    
+    return 0;
 }
 
-uint32_t expr(char *e, bool *success) {
-	if (!make_token(e)) {
-		*success = false;
-		return 0;
-	}
 
-	/* TODO: Insert codes to evaluate the expression. */
-    int i;
+uint32_t expr(char *e, bool *success) {
+    if(!make_token(e)) {
+        *success = false;
+        return 0;
+    }
+
+    /* TODO: Insert codes to evaluate the expression. */
+    int i = 0;
     for (i = 0;i < nr_token; ++i) {
         if (tokens[i].type == '*' && 
                 (i == 0 || 
@@ -393,7 +372,8 @@ uint32_t expr(char *e, bool *success) {
                 tokens[i].priority = 6;
             }
     }
-	
-	*success = true;
-	return eval(0, nr_token - 1, success);
+    *success = true;
+    
+    return eval(0, nr_token - 1);
 }
+
