@@ -268,43 +268,46 @@ uint32_t eval(int p, int q, bool *succuess) {
 */
 
 
-uint32_t eval(int lp, int rp){
-    if(lp > rp) { Assert (lp > rp, "Wrong expression!\n"); return 0;}
+uint32_t eval(int p, int q){
+    if(p > p) {
+		 Assert (p > p, "Wrong expression!\n"); 
+		 return 0;
+	}
     
-    else if (lp == rp){
+    else if (p == p){
         uint32_t num = 0;
-        if(tokens[lp].type == DEX)
-            sscanf(tokens[lp].str, "%d", &num);
-        else if (tokens[lp].type == HEX)
-            sscanf(tokens[lp].str, "%x", &num);
-        else if (tokens[lp].type == REGISTER){
-            if(strlen(tokens[lp].str) == 3){
+        if(tokens[p].type == DEX) // 十进制数
+            sscanf(tokens[p].str, "%d", &num);
+        else if (tokens[p].type == HEX) // 十六进制数
+            sscanf(tokens[p].str, "%x", &num);
+        else if (tokens[p].type == REGISTER){ // 寄存器
+            if(strlen(tokens[p].str) == 3){
                 int i;
                 for(i = R_EAX; i <= R_EDI; i++){
-                    if(strcmp(tokens[lp].str, regsl[i]) == 0) {num = reg_l(i);  break;}
+                    if(strcmp(tokens[p].str, regsl[i]) == 0) {num = reg_l(i);  break;}
                 }
-                if( i > R_EDI && strcmp(tokens[lp].str, "eip") == 0) num = cpu.eip;
+                if( i > R_EDI && strcmp(tokens[p].str, "eip") == 0) num = cpu.eip;
                     else Assert(1, "No such register, you may check for your spellings");
             }
-            else if(strlen(tokens[lp].str) == 2){
+            else if(strlen(tokens[p].str) == 2){
                 int i;
-                if(tokens[lp].str[1] == 'x' || tokens[lp].str[1] == 'i' || tokens[lp].str[1] == 'p'){
+                if(tokens[p].str[1] == 'x' || tokens[p].str[1] == 'i' || tokens[p].str[1] == 'p'){
                     for(i = R_AX; i <= R_DI; i ++){
-                        if(strcmp(tokens[lp].str, regsw[i]) == 0) {num = reg_w(i);  break;}
+                        if(strcmp(tokens[p].str, regsw[i]) == 0) {num = reg_w(i);  break;}
                         else Assert(1, "No such register, you may check for your spellings");
                     }
                 }
-                else if(tokens[lp].str[1] == 'h' || tokens[lp].str[1] == 'l'){
+                else if(tokens[p].str[1] == 'h' || tokens[p].str[1] == 'l'){
                     for(i = R_AL; i <= R_BH; i ++){
-                        if(strcmp(tokens[lp].str, regsb[i]) == 0) {num = reg_b(i);  break;}
+                        if(strcmp(tokens[p].str, regsb[i]) == 0) {num = reg_b(i);  break;}
                         else Assert(1, "No such register, you may check for your spellings");
                     }
                 }
             }
         }
-        else if (tokens[lp].type == VARIABLE) {
+        else if (tokens[p].type == VARIABLE) { // 变量
             bool success = false;
-            num = getVariable(tokens[lp].str, &success);
+            num = getVariable(tokens[p].str, &success);
             if(!success) Assert(1, "wrong varibale");
         }
 
@@ -313,17 +316,17 @@ uint32_t eval(int lp, int rp){
         return num;
     }
     
-    else if(check_parentheses(lp, rp) == 1){
-        return eval(lp + 1, rp - 1);
+    else if(check_parentheses(p, p) == 1){
+        return eval(p + 1, p - 1);
     }
     else{
-        uint32_t dop;
-        dop = dominant_operator(lp, rp);
-        if(dop == lp || tokens[dop].type == MINUS || tokens[dop].type == POINTER
-                || tokens[dop].type == '!'){
+        uint32_t op;
+        op = dominant_operator(p, p);
+        if(op == p || tokens[op].type == MINUS || tokens[op].type == POINTER
+                || tokens[op].type == '!'){
             int val;
-            val = eval(lp + 1, rp);
-            switch (tokens[dop].type) {
+            val = eval(p + 1, p);
+            switch (tokens[op].type) {
                 case MINUS: return -val;
                 case POINTER: return swaddr_read(val, 4);
                 case '!': return !val;
@@ -331,9 +334,9 @@ uint32_t eval(int lp, int rp){
             }
         }
         uint32_t val1, val2;
-        val1 = eval(lp, dop - 1); val2 = eval(dop + 1, rp);
+        val1 = eval(p, op - 1); val2 = eval(op + 1, p);
         
-        switch (tokens[dop].type) {
+        switch (tokens[op].type) {
             case '+': return val1 + val2;
             case '-': return val1 - val2;
             case '*': return val1 * val2;
