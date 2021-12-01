@@ -317,13 +317,13 @@ uint32_t eval(int p, int q){
         return eval(p + 1, q - 1);
     }
     else{
-        uint32_t dop;
-        dop = dominant_operator(p, q);
-        if(dop == p || tokens[dop].type == MINUS || tokens[dop].type == POINTER
-                || tokens[dop].type == '!'){
+        uint32_t op;
+        op = dominant_operator(p, q);
+        if(op == p || tokens[op].type == MINUS || tokens[op].type == POINTER
+                || tokens[op].type == '!'){
             int val;
             val = eval(p + 1, q);
-            switch (tokens[dop].type) {
+            switch (tokens[op].type) {
                 case MINUS: return -val;
                 case POINTER: return swaddr_read(val, 4);
                 case '!': return !val;
@@ -331,9 +331,9 @@ uint32_t eval(int p, int q){
             }
         }
         uint32_t val1, val2;
-        val1 = eval(p, dop - 1); val2 = eval(dop + 1, q);
+        val1 = eval(p, op - 1); val2 = eval(op + 1, q);
         
-        switch (tokens[dop].type) {
+        switch (tokens[op].type) {
             case '+': return val1 + val2;
             case '-': return val1 - val2;
             case '*': return val1 * val2;
