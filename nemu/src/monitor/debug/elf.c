@@ -8,18 +8,19 @@ static char *strtab = NULL;
 static Elf32_Sym *symtab = NULL;
 static int nr_symtab_entry;
 
-uint32_t getVariable(char* name, bool* success) {
-  *success = true;
-  int i;
-  for (i = 0; i < nr_symtab_entry; i++) {
-    if ((symtab[i].st_info & 0xf) == STT_OBJECT) {
-      char ls[50];
-      strcpy(ls, strtab + symtab[i].st_name);
-      if (strcmp(ls, name) == 0)
-        return symtab[i].st_value;
-    }
-  }
-  *success = false;
+int getVariable(char* name, bool* success){
+	*success = false;
+  	int i = 0;
+  	for (; i < nr_symtab_entry; i++) {
+    	if ((symtab[i].st_info & 0xf) == STT_OBJECT) {
+			char str[32];
+			strcpy(str, strtab + symtab[i].st_name);
+			if (strcmp(str, name) == 0) {
+				*success = true;
+				return symtab[i].st_value;
+			}
+    	}
+  	}
   return 0;
 }
 
