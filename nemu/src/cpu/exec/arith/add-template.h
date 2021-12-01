@@ -1,9 +1,10 @@
 #include "cpu/exec/template-start.h"
 
-#define instr adc
+#define instr add
 
-static void do_execute () {
-	DATA_TYPE ret = op_dest->val + op_src->val + cpu.CF;
+static void do_execute(){
+    DATA_TYPE ret = op_dest->val + op_src->val;
+    // printf("%d   %d\n",op_dest->val, op_src->val);
     int len = (DATA_BYTE << 3) -1;
     cpu.CF = (ret < op_dest->val);
     cpu.SF = ret >> len;
@@ -17,7 +18,7 @@ static void do_execute () {
     print_asm_template2();
 }
 
-#if DATA_BYTE == 2|| DATA_BYTE == 4
+#if DATA_BYTE == 2 || DATA_BYTE == 4
 make_instr_helper(si2rm)
 #endif
 
