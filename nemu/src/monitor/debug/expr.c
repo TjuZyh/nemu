@@ -268,10 +268,10 @@ uint32_t eval(int p, int q, bool *succuess) {
 */
 
 
-uint32_t eval(int p, int rp){
-    if(p > rp) { Assert (p > rp, "Wrong expression!\n"); return 0;}
+uint32_t eval(int p, int q){
+    if(p > q) { Assert (p > q, "Wrong expression!\n"); return 0;}
     
-    else if (p == rp){
+    else if (p == q){
         uint32_t num = 0;
         if(tokens[p].type == DEX) // 十进制数
             sscanf(tokens[p].str, "%d", &num);
@@ -313,16 +313,16 @@ uint32_t eval(int p, int rp){
         return num;
     }
     
-    else if(check_parentheses(p, rp) == 1){
-        return eval(p + 1, rp - 1);
+    else if(check_parentheses(p, q) == 1){
+        return eval(p + 1, q - 1);
     }
     else{
         uint32_t dop;
-        dop = dominant_operator(p, rp);
+        dop = dominant_operator(p, q);
         if(dop == p || tokens[dop].type == MINUS || tokens[dop].type == POINTER
                 || tokens[dop].type == '!'){
             int val;
-            val = eval(p + 1, rp);
+            val = eval(p + 1, q);
             switch (tokens[dop].type) {
                 case MINUS: return -val;
                 case POINTER: return swaddr_read(val, 4);
@@ -331,7 +331,7 @@ uint32_t eval(int p, int rp){
             }
         }
         uint32_t val1, val2;
-        val1 = eval(p, dop - 1); val2 = eval(dop + 1, rp);
+        val1 = eval(p, dop - 1); val2 = eval(dop + 1, q);
         
         switch (tokens[dop].type) {
             case '+': return val1 + val2;
