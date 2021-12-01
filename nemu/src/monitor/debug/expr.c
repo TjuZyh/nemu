@@ -183,7 +183,8 @@ int dominant_operator(int p, int q) {
 }
 
 uint32_t eval(int p, int q, bool *succuess) {
-//	printf()
+printf("%d\n", tokens[p].type);
+printf("**\n");
 	if (p > q) {
 		*succuess = false;
 		return 0;
