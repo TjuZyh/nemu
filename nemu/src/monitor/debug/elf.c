@@ -11,7 +11,7 @@ static int nr_symtab_entry;
 uint32_t getVariable(char* name, bool* success) {
   *success = true;
   int i;
-  for (i = 0; i < nr_symtab_entry; ++i) {
+  for (i = 0; i < nr_symtab_entry; i++) {
     if ((symtab[i].st_info & 0xf) == STT_OBJECT) {
       char ls[50];
       strcpy(ls, strtab + symtab[i].st_name);
