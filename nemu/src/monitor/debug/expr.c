@@ -183,6 +183,7 @@ int dominant_operator(int p, int q) {
 }
 
 uint32_t eval(int p, int q, bool *succuess) {
+//	printf()
 	if (p > q) {
 		*succuess = false;
 		return 0;
@@ -198,7 +199,6 @@ uint32_t eval(int p, int q, bool *succuess) {
 			return getVariable(tokens[p].str, succuess);
 		}
 		else if (tokens[p].type == REGISTER) { // 寄存器
-		printf("寄存器\n");
 			int i;
 			uint32_t len = strlen(tokens[p].str);
 			if (len == 3) {
