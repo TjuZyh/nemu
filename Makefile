@@ -84,7 +84,7 @@ USERPROG := obj/testcase/add
 
 # USERPROG := obj/testcase/prime
 # USERPROG := obj/testcase/print-FLOAT # bad
-# USERPROG := obj/testcase/quadratic-eq # bad
+# USERPROG := obj/testcase/quadratic-eq
 
 # USERPROG := obj/testcase/quick-sort
 # USERPROG := obj/testcase/select-sort
